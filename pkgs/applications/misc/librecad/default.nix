@@ -1,5 +1,6 @@
 { boost
 , fetchFromGitHub
+, fetchpatch
 , installShellFiles
 , mkDerivationWith
 , muparser
@@ -28,7 +29,14 @@ mkDerivationWith stdenv.mkDerivation rec {
     sha256 = "0kwj838hqzbw95gl4x6scli9gj3gs72hdmrrkzwq5rjxam18k3f3";
   };
 
-  patches = [ ./fix_qt_5_11_build.patch ];
+  patches = [
+    ./fix_qt_5_11_build.patch
+    (fetchpatch {
+      # Fix missing app name and icon on Wayland.
+      url = "https://github.com/LibreCAD/LibreCAD/commit/a17f8281093403f0c7c36996232665ed21906688.patch";
+      sha256 = "1x46psh4bcx2hxck4l83ki43g1252vb033i2x94h4rpai9hww4d5";
+    })
+  ];
 
   postPatch = ''
     substituteInPlace scripts/postprocess-unix.sh \
